@@ -18,7 +18,7 @@ router.get("/:id", async (req, res) => {
       include: [{ model: Product }],
     });
     res.status(200).json(categoryIdData);
-  } catch {
+  } catch (err) {
     res.status(500).json(err);
   }
 });
@@ -39,12 +39,12 @@ router.put("/:id", async (req, res) => {
 
 router.delete("/:id", async (req, res) => {
   try {
-    const categoryId = await Category.destroy({
+    const delCategoryId = await Category.destroy({
       where: {
         id: req.params.id,
       },
     });
-    res.status(200).json(categoryId);
+    res.status(200).json(delCategoryId);
   } catch (err) {
     res.status(500).json(err);
   }
