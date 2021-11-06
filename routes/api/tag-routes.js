@@ -3,7 +3,7 @@ const { Tag, Product, ProductTag, Category } = require("../../models");
 
 router.get("/", async (req, res) => {
   try {
-    const allTagData = await Category.findAll({
+    const allTagData = await Tag.findAll({
       include: [{ model: Product }],
     });
     res.status(200).json(allTagData);
@@ -14,7 +14,7 @@ router.get("/", async (req, res) => {
 
 router.get("/:id", async (req, res) => {
   try {
-    const singleTagData = await Category.findByPk(req.params.id, {
+    const singleTagData = await Tag.findByPk(req.params.id, {
       include: [{ model: Product }],
     });
     res.status(200).json(singleTagData);
@@ -39,7 +39,7 @@ router.put("/:id", (req, res) => {
 
 router.delete("/:id", (req, res) => {
   try {
-    const delTagId = await Tag.destroy({
+    const delTagId = Tag.destroy({
       where: {
         id: req.params.id,
       },

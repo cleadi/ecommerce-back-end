@@ -1,10 +1,10 @@
 const router = require("express").Router();
 const { Product, Category, Tag, ProductTag } = require("../../models");
 
-router.get("/", (req, res) => {
+router.get("/", async (req, res) => {
   try {
-    const allProdData = await Product.findByPk(req.params.id, {
-      include: [{ model: Category }] && [{ model: Tag }],
+    const allProdData = await Product.findAll({
+      include: [{ model: Category }, { model: Tag }],
     });
     res.status(200).json(allProdData);
   } catch (err) {
@@ -12,10 +12,10 @@ router.get("/", (req, res) => {
   }
 });
 
-router.get("/:id", (req, res) => {
+router.get("/:id", async (req, res) => {
   try {
-    const oneProdData = await Product.findOne(req.params.id, {
-      include: [{ model: Category }] && [{ model: Tag }],
+    const oneProdData = await Product.findByPk(req.params.id, {
+      include: [{ model: Category }, { model: Tag }],
     });
     res.status(200).json(oneProdData);
   } catch (err) {
@@ -23,7 +23,9 @@ router.get("/:id", (req, res) => {
   }
 });
 
-router.post("/", (req, res) => {
+router.post("/", async (req, res) => {
+  const addProductData = await Product.create(req.body);
+  res.status(200).json(addProductData);
   Product.create(req.body)
     .then((product) => {
       if (req.body.tagIds.length) {
@@ -39,12 +41,11 @@ router.post("/", (req, res) => {
     })
     .then((productTagIds) => res.status(200).json(productTagIds))
     .catch((err) => {
-      console.log(err);
       res.status(400).json(err);
     });
 });
 
-router.put("/:id", (req, res) => {
+router.put("/:id", async (req, res) => {
   Product.update(req.body, {
     where: {
       id: req.params.id,
